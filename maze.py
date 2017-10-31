@@ -109,8 +109,16 @@ class Maze:
         return string
 
     def addWall(self, position = [0,0], direction = 0): 
-        if (self.maze[position[0]][position[1]] & direction) == 0:
-            self.maze[position[0]][position[1]] += direction
+        if (self.maze[position[1]][position[0]] & direction) == 0:
+            self.maze[position[1]][position[0]] += direction
+            if direction == 1 and position[1] > 0:
+                self.maze[position[1] - 1][position[0]] += 4
+            if direction == 2 and position[0] < 15:
+                self.maze[position[1]][position[0] + 1] += 8
+            if direction == 4 and position[1] < 15:
+                self.maze[position[1] + 1][position[0]] += 1
+            if direction == 8 and position[0] > 0:
+                self.maze[position[1]][position[0] - 1] += 2
 
 
     def moveMouse(self, direction = 0):
@@ -129,4 +137,3 @@ class Maze:
 #             [10,8,5,1,6,11,9,5,5,5,5,5,5,3,13,3], [10,12,3,12,5,4,6,9,5,1,5,1,5,6,9,2], [8,3,12,5,5,5,5,6,11,12,5,4,5,5,6,10], [14,12,5,5,5,5,5,5,4,5,5,5,5,5,5,6]])
 
 a = Maze() # Labirinto vazio
-print(a)
