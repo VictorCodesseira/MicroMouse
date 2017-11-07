@@ -127,18 +127,29 @@ class Maze:
                 self.maze[position[1] + 1][position[0]] += 1
             if direction == 8 and position[0] > 0:
                 self.maze[position[1]][position[0] - 1] += 2
-        self.inter.update()
+            self.inter.update_wall(position, direction)
 
 
 
     def moveMouse(self, direction = 0):
+        cell = "white"
+        mouse_color = "yellow"
+
         if direction == 0:
-            return
+            return False
 
         if (self.maze[self.mouse.y][self.mouse.x] & direction) == 0:
+            print (self.maze[self.mouse.y][self.mouse.x], direction)
+            i_1 = self.mouse.x
+            j_1 = self.mouse.y
             self.mouse.move(direction)
+            i_2 = self.mouse.x
+            j_2 = self.mouse.y
 
-        self.inter.update()
+            self.inter.update_cells([[i_1,j_1], [i_2,j_2]])
 
+        else:
+
+            return False
 
 
