@@ -1,11 +1,86 @@
 from tkinter import *
 
 class Interface:
+
     def __init__(self, maze):
+        def move_up():
+            self.maze.moveMouse(1)
+        def move_right():
+            self.maze.moveMouse(2)
+        def move_down():
+            self.maze.moveMouse(4)
+        def move_left():
+            self.maze.moveMouse(8)
+
+        def toggle_wall_up():
+            self.maze.toggleWall([self.maze.mouse.x, self.maze.mouse.y], 1)
+        def toggle_wall_right():
+            self.maze.toggleWall([self.maze.mouse.x, self.maze.mouse.y], 2)
+        def toggle_wall_down():
+            self.maze.toggleWall([self.maze.mouse.x, self.maze.mouse.y], 4)
+        def toggle_wall_left():
+            self.maze.toggleWall([self.maze.mouse.x, self.maze.mouse.y], 8)
+
+
         self.master = Tk()
         self.maze = maze
-        self.w = Canvas(self.master, width = 660, height = 660)
+        self.outer_frame = Frame(self.master)
+        self.outer_frame.pack()
+        self.canvas_frame = Frame(self.outer_frame)
+        self.w = Canvas(self.canvas_frame, width = 660, height = 660)
+        self.canvas_frame.grid(row = 0, column = 0, rowspan = 2)
         self.draw()
+
+
+        self.separator_frame = Frame(self.outer_frame)
+        self.outer_frame.grid_columnconfigure(1, minsize = 50)
+        self.outer_frame.grid_columnconfigure(3, minsize = 50)
+        self.separator_frame.grid(row = 0, column = 1)
+        self.separator_frame.grid(row = 0, column = 3)
+
+
+        self.arrows_frame = Frame(self.outer_frame)
+
+        up = Button(self.arrows_frame, text = "Up", command = move_up)
+        up.grid(row = 0, column = 1)
+        up.config(height = 5, width = 10)
+
+        right = Button(self.arrows_frame, text = "Right", command = move_right)
+        right.grid(row = 1, column = 2)
+        right.config(height = 5, width = 10)
+
+        down = Button(self.arrows_frame, text = "Down", command = move_down)
+        down.grid(row = 2, column = 1)
+        down.config(height = 5, width = 10)
+
+        left = Button(self.arrows_frame, text = "Left", command = move_left)
+        left.grid(row = 1, column = 0)
+        left.config(height = 5, width = 10)
+
+        self.arrows_frame.grid(row = 0, column = 2)
+
+
+        self.walls_frame = Frame(self.outer_frame)
+
+        up_wall = Button(self.walls_frame, text = "Up Wall", command = toggle_wall_up)
+        up_wall.grid(row = 0, column = 1)
+        up_wall.config(height = 5, width = 10)
+
+        right_wall = Button(self.walls_frame, text = "Right Wall", command = toggle_wall_right)
+        right_wall.grid(row = 1, column = 2)
+        right_wall.config(height = 5, width = 10)
+
+        down_wall = Button(self.walls_frame, text = "Down Wall", command = toggle_wall_down)
+        down_wall.grid(row = 2, column = 1)
+        down_wall.config(height = 5, width = 10)
+
+        left_wall = Button(self.walls_frame, text = "Left Wall", command = toggle_wall_left)
+        left_wall.grid(row = 1, column = 0)
+        left_wall.config(height = 5, width = 10)
+
+        self.walls_frame.grid(row = 1, column = 2)
+
+
         self.master.update_idletasks()
         self.master.update()
 
@@ -49,9 +124,9 @@ class Interface:
         self.w.pack()
 
     def update(self):
-        self.draw()
         self.master.update_idletasks()
         self.master.update()
+
 
     def update_cells(self, lista):
         cell = "white"
@@ -74,18 +149,29 @@ class Interface:
         self.master.update_idletasks()
         self.master.update()
 
-    def update_wall(self, position, parede):
+    def update_wall(self, position, parede, add = 1):
         wall = "black"
+        empty_wall = "light gray"
         i = position[0]
         j = position[1]
-        if parede == 1:
-            self.w.create_rectangle(40*i + 15, 40*j + 5, 40*i + 45, 40*j + 15, fill = wall, outline = wall)
-        elif parede == 2:
-            self.w.create_rectangle(40*i + 45, 40*j + 15, 40*i + 55, 40*j + 45, fill = wall, outline = wall)
-        elif parede == 4:
-            self.w.create_rectangle(40*i + 15, 40*j + 45, 40*i + 45, 40*j + 55, fill = wall, outline = wall)
+        if add == 1:
+            if parede == 1:
+                self.w.create_rectangle(40*i + 15, 40*j + 5, 40*i + 45, 40*j + 15, fill = wall, outline = wall)
+            elif parede == 2:
+                self.w.create_rectangle(40*i + 45, 40*j + 15, 40*i + 55, 40*j + 45, fill = wall, outline = wall)
+            elif parede == 4:
+                self.w.create_rectangle(40*i + 15, 40*j + 45, 40*i + 45, 40*j + 55, fill = wall, outline = wall)
+            else:
+                self.w.create_rectangle(40*i + 5, 40*j + 15, 40*i + 15, 40*j + 45, fill = wall, outline = wall)
         else:
-            self.w.create_rectangle(40*i + 5, 40*j + 15, 40*i + 15, 40*j + 45, fill = wall, outline = wall)
-
+            if parede == 1:
+                self.w.create_rectangle(40*i + 15, 40*j + 5, 40*i + 45, 40*j + 15, fill = empty_wall, outline = empty_wall)
+            elif parede == 2:
+                self.w.create_rectangle(40*i + 45, 40*j + 15, 40*i + 55, 40*j + 45, fill = empty_wall, outline = empty_wall)
+            elif parede == 4:
+                self.w.create_rectangle(40*i + 15, 40*j + 45, 40*i + 45, 40*j + 55, fill = empty_wall, outline = empty_wall)
+            else:
+                self.w.create_rectangle(40*i + 5, 40*j + 15, 40*i + 15, 40*j + 45, fill = empty_wall, outline = empty_wall)
         self.master.update_idletasks()
         self.master.update()
+

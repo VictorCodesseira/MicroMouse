@@ -127,9 +127,31 @@ class Maze:
                 self.maze[position[1] + 1][position[0]] += 1
             if direction == 8 and position[0] > 0:
                 self.maze[position[1]][position[0] - 1] += 2
-            self.inter.update_wall(position, direction)
+            self.inter.update_wall(position, direction, 1)
 
-
+    def toggleWall(self, position = [0,0], direction = 0):
+        if (self.maze[position[1]][position[0]] & direction) == 0:
+            self.maze[position[1]][position[0]] += direction
+            if direction == 1 and position[1] > 0:
+                self.maze[position[1] - 1][position[0]] += 4
+            if direction == 2 and position[0] < 15:
+                self.maze[position[1]][position[0] + 1] += 8
+            if direction == 4 and position[1] < 15:
+                self.maze[position[1] + 1][position[0]] += 1
+            if direction == 8 and position[0] > 0:
+                self.maze[position[1]][position[0] - 1] += 2
+            self.inter.update_wall(position, direction, 1)
+        else:
+            self.maze[position[1]][position[0]] -= direction
+            if direction == 1 and position[1] > 0:
+                self.maze[position[1] - 1][position[0]] -= 4
+            if direction == 2 and position[0] < 15:
+                self.maze[position[1]][position[0] + 1] -= 8
+            if direction == 4 and position[1] < 15:
+                self.maze[position[1] + 1][position[0]] -= 1
+            if direction == 8 and position[0] > 0:
+                self.maze[position[1]][position[0] - 1] -= 2
+            self.inter.update_wall(position, direction, 0)
 
     def moveMouse(self, direction = 0):
         cell = "white"
