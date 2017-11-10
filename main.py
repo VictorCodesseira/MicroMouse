@@ -1,22 +1,29 @@
 from maze import Maze
 from time import sleep
 import random
-a = Maze(1)
-# sleep(1)
-# a.addWall([9,7], 1)
-# sleep(1)
-# a.addWall([9,7], 2)
-# sleep(1)
-# a.addWall([9,7], 4)
-# sleep(1)
-# a.addWall([9,7], 8)
-# sleep(1)
 
-x = 10 + 10
+full = Maze(1)
+memory = Maze(0)
+
+dire = [2,4,2,1,2,2,2,2,8,4,4,8,1]
+
+for direction in dire:
+    sleep(1)
+    full.moveMouse(direction)
+    memory.moveMouse(direction)
+    x, y = full.mousePosition()
+    if full.mouseValue() & 1:
+        memory.addWall([x,y], 1)
+    if full.mouseValue() & 2:
+        memory.addWall([x,y], 2)
+    if full.mouseValue() & 4:
+        memory.addWall([x,y], 4)
+    if full.mouseValue() & 8:
+        memory.addWall([x,y], 8)
+
 while(1):
-    # a.moveMouse(random.choice([1,2,4,8]))
-    # a.addWall([0,0], 8)
-    a.inter.update()
-
+    full.inter.update()
+    memory.inter.update()
+    pass
 
 

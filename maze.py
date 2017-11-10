@@ -20,8 +20,9 @@ class Mouse:
             self.x -= 1
 
 class Maze:
-    def __init__(self, maze = 0, M = Mouse(), target = [[7,7],[7,8],[8,7],[8,8]]):
-        self.mouse = M
+    def __init__(self, maze = 0, M = 0, target = [[7,7],[7,8],[8,7],[8,8]]):
+        if M == 0:
+            self.mouse = Mouse()
         self.targets = target
         if maze == 0: # Labirinto Vazio
             maze = [[9,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
@@ -161,7 +162,6 @@ class Maze:
             return False
 
         if (self.maze[self.mouse.y][self.mouse.x] & direction) == 0:
-            print (self.maze[self.mouse.y][self.mouse.x], direction)
             i_1 = self.mouse.x
             j_1 = self.mouse.y
             self.mouse.move(direction)
@@ -173,5 +173,11 @@ class Maze:
         else:
 
             return False
+
+    def mouseValue(self):
+        return self.maze[self.mouse.y][self.mouse.x]
+
+    def mousePosition(self):
+        return self.mouse.x, self.mouse.y
 
 
