@@ -1,6 +1,6 @@
 from interface import *
 
-class Mouse:
+class Mouse: # Classe do mouse(só pra facilitar um pouco)
     def __init__(self, x = 0, y = 0, direction = 4):
         self.x = x
         self.y = y
@@ -19,25 +19,25 @@ class Mouse:
         elif self.d == 8:
             self.x -= 1
 
-class Maze:
+class Maze: # Classe do labirinto em si
     def __init__(self, maze = 0, M = 0, target = [[7,7],[7,8],[8,7],[8,8]]):
         if M == 0:
             self.mouse = Mouse()
-        self.targets = target
+        self.targets = target # Lista de "alvos" do labirinto
         if maze == 0: # Labirinto Vazio
             maze = [[9,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
                     [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
                     [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
                     [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [12,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,6]]
-        elif maze == 1:
+        elif maze == 1: # Labirinto 2016
             maze = [[9,3,9,5,5,1,7,9,3,9,3,9,5,5,5,3], [10,12,6,9,3,10,9,6,12,6,10,10,9,5,5,6], [10,9,5,6,12,6,12,3,9,2,10,10,10,13,1,3], [10,10,9,5,5,5,5,6,14,8,4,6,10,11,10,10],
                     [10,10,8,3,9,3,9,3,9,2,9,3,8,2,10,10], [10,8,6,12,6,12,6,8,6,12,6,12,6,12,6,10], [10,10,9,3,9,5,3,12,7,11,11,11,11,9,5,2], [10,10,10,10,10,9,6,9,1,0,0,0,0,0,7,10],
                     [10,10,10,10,10,8,3,12,6,14,14,14,14,12,1,6], [10,10,10,10,10,14,12,5,5,5,5,5,5,5,4,3], [10,10,10,12,6,9,3,9,3,9,3,9,3,9,3,10], [10,10,12,5,1,6,12,6,12,6,12,6,12,6,12,6],
                     [10,8,5,1,6,11,9,5,5,5,5,5,5,3,13,3], [10,12,3,12,5,4,6,9,5,1,5,1,5,6,9,2], [8,3,12,5,5,5,5,6,11,12,5,4,5,5,6,10], [14,12,5,5,5,5,5,5,4,5,5,5,5,5,5,6]]
         self.maze = maze
-        self.inter = Interface(self)
+        self.inter = Interface(self) 
 
-    def __str__(self):
+    def __str__(self): # Função que cuida de imprimir o labirinto no console(só usar print())
         draw = [['+',' ','+', ' ',' ',' ', '+',' ','+'], ['+','_','+', ' ',' ',' ', '+',' ','+'],
                 ['+',' ','+', ' ',' ','|', '+',' ','+'], ['+','_','+', ' ',' ','|', '+',' ','+'],
                 ['+',' ','+', ' ',' ',' ', '+','_','+'], ['+','_','+', ' ',' ',' ', '+','_','+'],
@@ -117,7 +117,7 @@ class Maze:
 
         return string
 
-    def addWall(self, position = [0,0], direction = 0):
+    def addWall(self, position = [0,0], direction = 0): # Adiciona uma parede em uma posição [x,y], numa direção
         if (self.maze[position[1]][position[0]] & direction) == 0:
             self.maze[position[1]][position[0]] += direction
             if direction == 1 and position[1] > 0:
@@ -130,7 +130,7 @@ class Maze:
                 self.maze[position[1]][position[0] - 1] += 2
             self.inter.update_wall(position, direction, 1)
 
-    def toggleWall(self, position = [0,0], direction = 0):
+    def toggleWall(self, position = [0,0], direction = 0): # O mesmo que acima, mas se a parede já existir, remove ela
         if (self.maze[position[1]][position[0]] & direction) == 0:
             self.maze[position[1]][position[0]] += direction
             if direction == 1 and position[1] > 0:
@@ -154,10 +154,7 @@ class Maze:
                 self.maze[position[1]][position[0] - 1] -= 2
             self.inter.update_wall(position, direction, 0)
 
-    def moveMouse(self, direction = 0):
-        cell = "white"
-        mouse_color = "yellow"
-
+    def moveMouse(self, direction = 0): # Move o mouse e atualiza a interface
         if direction == 0:
             return False
 
@@ -174,10 +171,12 @@ class Maze:
 
             return False
 
-    def mouseValue(self):
+    def mouseValue(self): # Retorna o valor de paredes da célula na qual o mouse está
         return self.maze[self.mouse.y][self.mouse.x]
 
-    def mousePosition(self):
+    def mousePosition(self): # Retorna uma lista [x,y] com a posição do mouse
         return self.mouse.x, self.mouse.y
 
+    def update(self): # Atualiza a interface
+        self.inter.update()
 

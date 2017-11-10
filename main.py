@@ -22,8 +22,8 @@ for direction in dire:
         memory.addWall([x,y], 8)
 
 while(1):
-    full.inter.update()
-    memory.inter.update()
-    pass
+    full.update() # Caso a GUI não esteja sendo constantemente atualizada, os botões não funcionam
+    memory.update()
+
 
 

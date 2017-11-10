@@ -1,8 +1,9 @@
 from tkinter import *
 
-class Interface:
+class Interface: # Classe que cria a interface gráfica do programa
 
     def __init__(self, maze):
+        # Funções dos botões
         def move_up():
             self.maze.moveMouse(1)
         def move_right():
@@ -21,24 +22,26 @@ class Interface:
         def toggle_wall_left():
             self.maze.toggleWall([self.maze.mouse.x, self.maze.mouse.y], 8)
 
-
+        # Declaração da estrutura
         self.master = Tk()
         self.maze = maze
         self.outer_frame = Frame(self.master)
         self.outer_frame.pack()
         self.canvas_frame = Frame(self.outer_frame)
+
+        # Labirinto em si
         self.w = Canvas(self.canvas_frame, width = 660, height = 660)
         self.canvas_frame.grid(row = 0, column = 0, rowspan = 2)
         self.draw()
 
-
+        # Separadores para organização
         self.separator_frame = Frame(self.outer_frame)
         self.outer_frame.grid_columnconfigure(1, minsize = 50)
         self.outer_frame.grid_columnconfigure(3, minsize = 50)
         self.separator_frame.grid(row = 0, column = 1)
         self.separator_frame.grid(row = 0, column = 3)
 
-
+        # Botões de setinhas
         self.arrows_frame = Frame(self.outer_frame)
 
         up = Button(self.arrows_frame, text = "Up", command = move_up)
@@ -59,7 +62,7 @@ class Interface:
 
         self.arrows_frame.grid(row = 0, column = 2)
 
-
+        # Botões de paredes
         self.walls_frame = Frame(self.outer_frame)
 
         up_wall = Button(self.walls_frame, text = "Up Wall", command = toggle_wall_up)
@@ -80,12 +83,12 @@ class Interface:
 
         self.walls_frame.grid(row = 1, column = 2)
 
-
+        # Necessário para a GUI atualizar
         self.master.update_idletasks()
         self.master.update()
 
 
-    def draw(self):
+    def draw(self): # Função que (re)desenha todo labirinto(não usar sempre, é lenta)
         wall = "black"
         cell = "white"
         empty_wall = "light gray"
@@ -115,7 +118,7 @@ class Interface:
                     self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = target_color, outline = target_color)
                 else:
                     self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = cell, outline = cell)
-                    # self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.maze[j][i])
+                    # self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.maze[j][i]) # Mostra o valor das paredes na célula
             self.w.create_rectangle(40*16 + 5, 40*j + 15, 40*16 + 15, 40*j + 45, fill = wall, outline = wall)
         for i in range(16):
             self.w.create_rectangle(40*i + 5, 40*16 + 5, 40*i + 15, 40*16 + 15, fill = wall, outline = wall)
@@ -123,12 +126,12 @@ class Interface:
         self.w.create_rectangle(40*16 + 5, 40*16 + 5, 40*16 + 15, 40*16 + 15, fill = wall, outline = wall)
         self.w.pack()
 
-    def update(self):
+    def update(self): # Função usada para atualizar a GUI
         self.master.update_idletasks()
         self.master.update()
 
 
-    def update_cells(self, lista):
+    def update_cells(self, lista): # Atualiza apenas uma lista de células que foi mudada, bem mais rápido que todo o labirinto
         cell = "white"
         target_color = "red"
         mouse_color = "yellow"
@@ -144,12 +147,12 @@ class Interface:
                 self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = target_color, outline = target_color)
             else:
                 self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = cell, outline = cell)
-                # self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.maze[j][i])
+                # self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.maze[j][i]) # Mostra o valor das paredes na célula
 
         self.master.update_idletasks()
         self.master.update()
 
-    def update_wall(self, position, parede, add = 1):
+    def update_wall(self, position, parede, add = 1): # Atualiza(adiciona ou remove) a situação de uma parede
         wall = "black"
         empty_wall = "light gray"
         i = position[0]
