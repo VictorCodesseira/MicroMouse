@@ -118,7 +118,7 @@ class Interface: # Classe que cria a interface gráfica do programa
                     self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = target_color, outline = target_color)
                 else:
                     self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = cell, outline = cell)
-                    # self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.maze[j][i]) # Mostra o valor das paredes na célula
+                    self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.cellValue[j][i]) # Mostra o valor das paredes na célula
             self.w.create_rectangle(40*16 + 5, 40*j + 15, 40*16 + 15, 40*j + 45, fill = wall, outline = wall)
         for i in range(16):
             self.w.create_rectangle(40*i + 5, 40*16 + 5, 40*i + 15, 40*16 + 15, fill = wall, outline = wall)
@@ -147,7 +147,7 @@ class Interface: # Classe que cria a interface gráfica do programa
                 self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = target_color, outline = target_color)
             else:
                 self.w.create_rectangle(40*i + 15, 40*j + 15, 40*i + 45, 40*j + 45, fill = cell, outline = cell)
-                # self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.maze[j][i]) # Mostra o valor das paredes na célula
+                self.w.create_text(40*i + 30, 40*j + 30, text = self.maze.cellValue[j][i]) # Mostra o valor das paredes na célula
 
         self.master.update_idletasks()
         self.master.update()

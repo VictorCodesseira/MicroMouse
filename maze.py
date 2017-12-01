@@ -1,7 +1,7 @@
 from interface import *
 
 class Mouse: # Classe do mouse(só pra facilitar um pouco)
-    def __init__(self, x = 0, y = 0, direction = 4):
+    def __init__(self, x = 0, y = 0, direction = 2):
         self.x = x
         self.y = y
         self.d = direction
@@ -23,19 +23,27 @@ class Maze: # Classe do labirinto em si
     def __init__(self, maze = 0, M = 0, target = [[7,7],[7,8],[8,7],[8,8]]):
         if M == 0:
             self.mouse = Mouse()
+        else:
+            self.mouse = M
         self.targets = target # Lista de "alvos" do labirinto
         if maze == 0: # Labirinto Vazio
             maze = [[9,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
                     [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
                     [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
-                    [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [12,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,6]]
+                    [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2], [12,4,4,4,4,4,4,4,4,4,4,4,4,4,4,6]]
         elif maze == 1: # Labirinto 2016
             maze = [[9,3,9,5,5,1,7,9,3,9,3,9,5,5,5,3], [10,12,6,9,3,10,9,6,12,6,10,10,9,5,5,6], [10,9,5,6,12,6,12,3,9,2,10,10,10,13,1,3], [10,10,9,5,5,5,5,6,14,8,4,6,10,11,10,10],
                     [10,10,8,3,9,3,9,3,9,2,9,3,8,2,10,10], [10,8,6,12,6,12,6,8,6,12,6,12,6,12,6,10], [10,10,9,3,9,5,3,12,7,11,11,11,11,9,5,2], [10,10,10,10,10,9,6,9,1,0,0,0,0,0,7,10],
                     [10,10,10,10,10,8,3,12,6,14,14,14,14,12,1,6], [10,10,10,10,10,14,12,5,5,5,5,5,5,5,4,3], [10,10,10,12,6,9,3,9,3,9,3,9,3,9,3,10], [10,10,12,5,1,6,12,6,12,6,12,6,12,6,12,6],
                     [10,8,5,1,6,11,9,5,5,5,5,5,5,3,13,3], [10,12,3,12,5,4,6,9,5,1,5,1,5,6,9,2], [8,3,12,5,5,5,5,6,11,12,5,4,5,5,6,10], [14,12,5,5,5,5,5,5,4,5,5,5,5,5,5,6]]
         self.maze = maze
-        self.inter = Interface(self) 
+        self.cellValue = []
+        for i in range(16):
+            linha = []
+            for j in range(16):
+                linha.append(self.initialCellValue([i,j]))
+            self.cellValue.append(linha)
+        self.inter = Interface(self)
 
     def __str__(self): # Função que cuida de imprimir o labirinto no console(só usar print())
         draw = [['+',' ','+', ' ',' ',' ', '+',' ','+'], ['+','_','+', ' ',' ',' ', '+',' ','+'],
@@ -117,6 +125,7 @@ class Maze: # Classe do labirinto em si
 
         return string
 
+
     def addWall(self, position = [0,0], direction = 0): # Adiciona uma parede em uma posição [x,y], numa direção
         if (self.maze[position[1]][position[0]] & direction) == 0:
             self.maze[position[1]][position[0]] += direction
@@ -168,7 +177,6 @@ class Maze: # Classe do labirinto em si
             self.inter.update_cells([[i_1,j_1], [i_2,j_2]])
 
         else:
-
             return False
 
     def mouseValue(self): # Retorna o valor de paredes da célula na qual o mouse está
@@ -180,3 +188,65 @@ class Maze: # Classe do labirinto em si
     def update(self): # Atualiza a interface
         self.inter.update()
 
+    def setMouse(self, position = [0,0]):
+        i, j = self.mousePosition()
+
+        self.mouse.x = position[0]
+        self.mouse.y = position[1]
+
+        self.inter.update_cells([[i,j], [position[0],position[1]]])
+
+    def initialCellValue(self, position = [0,0]):
+        x, y = position
+        menor_x = 16
+        menor_y = 16
+        for target in self.targets:
+            dist_x = abs(target[1] - x)
+            dist_y = abs(target[0] - y)
+            if dist_x < menor_x:
+                menor_x = dist_x
+            if dist_y < menor_y:
+                menor_y = dist_y
+        return menor_x + menor_y
+
+    def minimumCell(self):
+        x, y = self.mousePosition()
+        minDir = [16]
+        minValue = 300
+        if (self.maze[y][x] & 1) == 0 and y>0 and self.cellValue[y-1][x] <= minValue:
+            if self.cellValue[y-1][x] == minValue:
+                minDir.append(1)
+            else:
+                minValue = self.cellValue[y-1][x]
+                minDir = [1]
+        if (self.maze[y][x] & 2) == 0 and x<15 and self.cellValue[y][x+1] <= minValue:
+            if self.cellValue[y][x+1] == minValue:
+                minDir.append(2)
+            else:
+                minValue = self.cellValue[y][x+1]
+                minDir = [2]
+        if (self.maze[y][x] & 4) == 0 and y<15 and self.cellValue[y+1][x] <= minValue:
+            if self.cellValue[y+1][x] == minValue:
+                minDir.append(4)
+            else:
+                minValue = self.cellValue[y+1][x]
+                minDir = [4]
+        if (self.maze[y][x] & 8) == 0 and x>0 and self.cellValue[y][x-1] <= minValue:
+            if self.cellValue[y][x-1] == minValue:
+                minDir.append(8)
+            else:
+                minValue = self.cellValue[y][x-1]
+                minDir = [8]
+        for dire in minDir:
+            relativo = dire/self.mouse.d
+            if relativo == 1:
+                return dire
+        for dire in minDir:
+            relativo = dire/self.mouse.d
+            if relativo != 1/4 and relativo != 4:
+                return dire
+        return minDir[0]
+
+    def updateCellValue(self, position, newValue):
+        self.cellValue[position[1]][position[0]] = newValue
+        self.inter.update_cells([position])
