@@ -155,13 +155,13 @@ class Maze: # Classe do labirinto em si
     def addWall(self, position = [0,0], direction = 0): # Adiciona uma parede em uma posição [x,y], numa direção
         if (self.maze[position[1]][position[0]] & direction) == 0:
             self.maze[position[1]][position[0]] += direction
-            if direction == 1 and position[1] > 0:
+            if direction == 1:
                 self.maze[position[1] - 1][position[0]] += 4
-            if direction == 2 and position[0] < 15:
+            if direction == 2:
                 self.maze[position[1]][position[0] + 1] += 8
-            if direction == 4 and position[1] < 15:
+            if direction == 4:
                 self.maze[position[1] + 1][position[0]] += 1
-            if direction == 8 and position[0] > 0:
+            if direction == 8:
                 self.maze[position[1]][position[0] - 1] += 2
             if self.inter != 0:
                 self.inter.update_wall(position, direction, 1)
@@ -169,33 +169,34 @@ class Maze: # Classe do labirinto em si
     def toggleWall(self, position = [0,0], direction = 0): # O mesmo que acima, mas se a parede já existir, remove ela
         if (self.maze[position[1]][position[0]] & direction) == 0:
             self.maze[position[1]][position[0]] += direction
-            if direction == 1 and position[1] > 0:
+            if direction == 1:
                 self.maze[position[1] - 1][position[0]] += 4
-            if direction == 2 and position[0] < 15:
+            if direction == 2:
                 self.maze[position[1]][position[0] + 1] += 8
-            if direction == 4 and position[1] < 15:
+            if direction == 4:
                 self.maze[position[1] + 1][position[0]] += 1
-            if direction == 8 and position[0] > 0:
+            if direction == 8:
                 self.maze[position[1]][position[0] - 1] += 2
             if self.inter != 0:
                 self.inter.update_wall(position, direction, 1)
         else:
             self.maze[position[1]][position[0]] -= direction
-            if direction == 1 and position[1] > 0:
+            if direction == 1:
                 self.maze[position[1] - 1][position[0]] -= 4
-            if direction == 2 and position[0] < 15:
+            if direction == 2:
                 self.maze[position[1]][position[0] + 1] -= 8
-            if direction == 4 and position[1] < 15:
+            if direction == 4:
                 self.maze[position[1] + 1][position[0]] -= 1
-            if direction == 8 and position[0] > 0:
+            if direction == 8:
                 self.maze[position[1]][position[0] - 1] -= 2
             if self.inter != 0:
                 self.inter.update_wall(position, direction, 0)
 
     def moveMouse(self, direction = 0): # Move o mouse e atualiza a interface
+        TURNDELAY = 0.05
+        MOVEDELAY = 0.05
         if direction == 0:
             return False
-
         if (self.maze[self.mouse.y][self.mouse.x] & direction) == 0:
             i_1 = self.mouse.x
             j_1 = self.mouse.y
@@ -204,11 +205,11 @@ class Maze: # Classe do labirinto em si
                     self.mouse.turn(1)
                     if self.inter != 0:
                         self.inter.update_cells([[i_1,j_1]])
-                    sleep(0.1)
+                    sleep(TURNDELAY)
                     self.mouse.turn(1)
                     if self.inter != 0:
                         self.inter.update_cells([[i_1,j_1]])
-                    sleep(0.1)
+                    sleep(TURNDELAY)
                 else:
                     dire = [1,2,4,8,1,8]
                     for i in range(len(dire)):
@@ -220,16 +221,16 @@ class Maze: # Classe do labirinto em si
                             break
                     if self.inter != 0:
                         self.inter.update_cells([[i_1,j_1]])
-                    sleep(0.1)
+                    sleep(TURNDELAY)
 
 
             self.mouse.move(direction)
             i_2 = self.mouse.x
             j_2 = self.mouse.y
+
             if self.inter != 0:
                 self.inter.update_cells([[i_1,j_1], [i_2,j_2]])
-            sleep(0.1)
-
+            sleep(MOVEDELAY)
         else:
             return False
 
@@ -269,25 +270,25 @@ class Maze: # Classe do labirinto em si
         x, y = self.mousePosition()
         minDir = [16]
         minValue = 300
-        if (self.maze[y][x] & 1) == 0 and y>0 and self.cellValue[y-1][x] <= minValue:
+        if (self.maze[y][x] & 1) == 0 and self.cellValue[y-1][x] <= minValue:
             if self.cellValue[y-1][x] == minValue:
                 minDir.append(1)
             else:
                 minValue = self.cellValue[y-1][x]
                 minDir = [1]
-        if (self.maze[y][x] & 2) == 0 and x<15 and self.cellValue[y][x+1] <= minValue:
+        if (self.maze[y][x] & 2) == 0 and self.cellValue[y][x+1] <= minValue:
             if self.cellValue[y][x+1] == minValue:
                 minDir.append(2)
             else:
                 minValue = self.cellValue[y][x+1]
                 minDir = [2]
-        if (self.maze[y][x] & 4) == 0 and y<15 and self.cellValue[y+1][x] <= minValue:
+        if (self.maze[y][x] & 4) == 0 and self.cellValue[y+1][x] <= minValue:
             if self.cellValue[y+1][x] == minValue:
                 minDir.append(4)
             else:
                 minValue = self.cellValue[y+1][x]
                 minDir = [4]
-        if (self.maze[y][x] & 8) == 0 and x>0 and self.cellValue[y][x-1] <= minValue:
+        if (self.maze[y][x] & 8) == 0 and self.cellValue[y][x-1] <= minValue:
             if self.cellValue[y][x-1] == minValue:
                 minDir.append(8)
             else:
@@ -307,25 +308,25 @@ class Maze: # Classe do labirinto em si
         x, y = self.mousePosition()
         minDir = [16]
         minValue = 300
-        if (self.maze[y][x] & 1) == 0 and y>0 and self.returnCellValue[y-1][x] <= minValue:
+        if (self.maze[y][x] & 1) == 0 and self.returnCellValue[y-1][x] <= minValue:
             if self.returnCellValue[y-1][x] == minValue:
                 minDir.append(1)
             else:
                 minValue = self.returnCellValue[y-1][x]
                 minDir = [1]
-        if (self.maze[y][x] & 2) == 0 and x<15 and self.returnCellValue[y][x+1] <= minValue:
+        if (self.maze[y][x] & 2) == 0 and self.returnCellValue[y][x+1] <= minValue:
             if self.returnCellValue[y][x+1] == minValue:
                 minDir.append(2)
             else:
                 minValue = self.returnCellValue[y][x+1]
                 minDir = [2]
-        if (self.maze[y][x] & 4) == 0 and y<15 and self.returnCellValue[y+1][x] <= minValue:
+        if (self.maze[y][x] & 4) == 0 and self.returnCellValue[y+1][x] <= minValue:
             if self.returnCellValue[y+1][x] == minValue:
                 minDir.append(4)
             else:
                 minValue = self.returnCellValue[y+1][x]
                 minDir = [4]
-        if (self.maze[y][x] & 8) == 0 and x>0 and self.returnCellValue[y][x-1] <= minValue:
+        if (self.maze[y][x] & 8) == 0 and self.returnCellValue[y][x-1] <= minValue:
             if self.returnCellValue[y][x-1] == minValue:
                 minDir.append(8)
             else:

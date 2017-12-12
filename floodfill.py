@@ -47,6 +47,7 @@ def stack_Iter(init_stack, empty):
             empty.returnCellValue[y_atual][x_atual] = ret_min_value+1
             for vizinho in viz_abertos:
                 stack.append(vizinho)
+
 def registerWalls(maze, previous_walls, new_walls, mouse_x, mouse_y):
 
     updated = (new_walls^previous_walls)
@@ -60,13 +61,13 @@ def registerWalls(maze, previous_walls, new_walls, mouse_x, mouse_y):
     if updated_walls:
         updated_cells = []
         for wall in updated_walls:
-            if wall&1 != 0 and mouse_y>0:
+            if wall&1 != 0:
                 stack.append([mouse_x, mouse_y-1])
-            if wall&2 != 0 and mouse_x<15:
+            if wall&2 != 0:
                 stack.append([mouse_x+1, mouse_y])
-            if wall&4 != 0 and mouse_y<15:
+            if wall&4 != 0:
                 stack.append([mouse_x, mouse_y+1])
-            if wall&8 != 0 and mouse_x>0:
+            if wall&8 != 0:
                 stack.append([mouse_x-1, mouse_y])
         stack.append([mouse_x, mouse_y])
     return stack
@@ -96,7 +97,8 @@ def floodFill(memory, real):
             real.update() # Caso a GUI não esteja sendo constantemente atualizada, os botões não funcionam
         if not changed:
             break
-        while(memory.mousePosition()!=(0,14)):
+
+        while(memory.mousePosition()!=(0,15)):
             minCell = memory.minimumReturnCell()
             real.moveMouse(minCell)
             memory.moveMouse(minCell)
@@ -112,6 +114,7 @@ def floodFill(memory, real):
 
             memory.update()
             real.update()
+
 
 def fastRun(maze):
     while(maze.cellValue[maze.mouse.y][maze.mouse.x]!=0):
